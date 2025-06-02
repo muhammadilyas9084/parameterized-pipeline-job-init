@@ -1,6 +1,10 @@
-
 pipeline {
   agent any
+
+  tools {
+    maven 'M298' // Make sure this matches the name in Jenkins
+  }
+
   stages {
     stage('Build') {
       steps {
@@ -12,10 +16,10 @@ pipeline {
     stage('Test') {
       steps {
         sh 'mvn test'
-        junit(testResults: 'target/surefire-reports/TEST-*.xml', keepProperties: true, keepTestNames: true)
+        junit testResults: 'target/surefire-reports/TEST-*.xml', keepProperties: true, keepTestNames: true
       }
     }
-    
+
     stage('Containerization') {
       steps {
         sh 'echo Docker Build Image..'
@@ -29,16 +33,12 @@ pipeline {
         sh 'echo Deploy to Kubernetes using ArgoCD'
       }
     }
-    
+
     stage('Integration Testing') {
       steps {
-        sh "sleep ${params.SLEEP_TIME}"
+        sh "sleep 10s"
         sh 'echo Testing using cURL commands......'
       }
     }
   }
-  tools {
-    maven 'M398'
-  }
-
 }
