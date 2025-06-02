@@ -10,7 +10,7 @@ pipeline {
 
   // 2. Add Java (JDK) and Maven tools here
   tools {
-    jdk 'jdk21'             // <-- This must match the name in Jenkins Global Tool Configuration
+    jdk 'jdk17'             // <-- This must match the name in Jenkins Global Tool Configuration
     maven 'M398'            // <-- This must match your configured Maven tool name
   }
 
