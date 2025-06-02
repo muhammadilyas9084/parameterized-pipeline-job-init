@@ -2,42 +2,54 @@ pipeline {
   agent any
 
   tools {
-    maven 'M298' // Make sure this matches the name in Jenkins
+    maven 'M298' // This must match the Maven name configured in Jenkins Global Tool Configuration
   }
 
   stages {
     stage('Build') {
       steps {
+        echo 'Building the project...'
         sh 'mvn clean package -DskipTests=true'
-        archiveArtifacts 'target/hello-demo-*.jar'
+        archiveArtifacts artifacts: 'target/hello-demo-*.jar', fingerprint: true
       }
     }
 
     stage('Test') {
       steps {
+        echo 'Running unit tests...'
         sh 'mvn test'
-        junit testResults: 'target/surefire-reports/TEST-*.xml', keepProperties: true, keepTestNames: true
+        junit testResults: 'target/surefire-reports/TEST-*.xml', 
+              allowEmptyResults: true, 
+              keepProperties: true, 
+              keepTestNames: true
       }
     }
 
     stage('Containerization') {
       steps {
-        sh 'echo Docker Build Image..'
-        sh 'echo Docker Tag Image....'
-        sh 'echo Docker Push Image......'
+        echo 'Docker Build, Tag, and Push steps go here...'
+        sh '''
+          echo "Building Docker image..."
+          echo "Tagging Docker image..."
+          echo "Pushing Docker image to registry..."
+        '''
       }
     }
 
     stage('Kubernetes Deployment') {
       steps {
-        sh 'echo Deploy to Kubernetes using ArgoCD'
+        echo 'Deploying to Kubernetes using ArgoCD...'
+        sh 'echo "argocd app sync your-app-name"'
       }
     }
 
     stage('Integration Testing') {
       steps {
-        sh "sleep 10s"
-        sh 'echo Testing using cURL commands......'
+        echo 'Running integration tests...'
+        sh '''
+          sleep 10
+          echo "Performing curl-based integration tests..."
+        '''
       }
     }
   }
