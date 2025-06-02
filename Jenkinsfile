@@ -3,6 +3,8 @@ pipeline {
 
   tools {
     maven 'M298' // This must match the Maven name configured in Jenkins Global Tool Configuration
+    jdk 'jdk17'
+
   }
 
   stages {
